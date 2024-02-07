@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.build.json",
   "include": [
-    "tests/**/*.test.ts" // include tests directory
+    "tests/**/*.test.ts", 
+    "src/**/*.ts",
   ],
 }
