@@ -1,0 +1,23 @@
+{
+  "name": "wsd-bank",
+  "version": "1.0.0",
+  "description": "A simple banking application for wsd coding round interview.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ari1337an/wsd_assignment.git"
+  },
+  "keywords": [
+    "console",
+    "bank"
+  ],
+  "author": "Md Sahadul Hasan Arian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ari1337an/wsd_assignment/issues"
+  },
+  "homepage": "https://github.com/ari1337an/wsd_assignment#readme"
+}
