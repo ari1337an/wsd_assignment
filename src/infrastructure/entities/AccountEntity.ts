@@ -1,6 +1,7 @@
 import { z, ZodError } from "zod";
 import SchemaError from "@/infrastructure/errors/SchemaError";
 import DepositError from "@/infrastructure/errors/DepositError";
+import WithdrawError from "@/infrastructure/errors/WithdrawError";
 
 export default abstract class AccountEntity {
   name: string;
@@ -47,6 +48,29 @@ export default abstract class AccountEntity {
     } catch (error) {
       if (error instanceof ZodError)
         throw new DepositError((error as ZodError).issues[0].message);
+      else throw error;
+    }
+  }
+
+  withdraw(amount: number): void {
+    try {
+      const validatedAmount = z
+        .number()
+        .positive("Withdrawal amount must be a positive number")
+        .multipleOf(0.01, {
+          message: "Amount can have two decimal precision.",
+        })
+        .parse(amount);
+
+      // Check if the account has sufficient balance
+      if (this.balance < validatedAmount) {
+        throw new WithdrawError("Insufficient balance for withdrawal!");
+      }
+
+      this.balance -= validatedAmount;
+    } catch (error) {
+      if (error instanceof ZodError)
+        throw new WithdrawError((error as ZodError).issues[0].message);
       else throw error;
     }
   }
