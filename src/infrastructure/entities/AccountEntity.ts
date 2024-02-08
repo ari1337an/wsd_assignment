@@ -8,12 +8,14 @@ export default abstract class AccountEntity {
   number: number;
   createdAt: string;
   balance: number;
+  smsServiceActiveStatus: boolean;
 
   constructor(
     name: string,
     number: number,
     createdAt: string,
-    balance: number
+    balance: number,
+    smsServiceActiveStatus: boolean = true // By default, SMS service is Active
   ) {
     try {
       const validatedData = AccountEntity.schema().parse({
@@ -21,12 +23,14 @@ export default abstract class AccountEntity {
         number,
         createdAt,
         balance,
+        smsServiceActiveStatus,
       });
 
       this.name = validatedData.name;
       this.number = validatedData.number;
       this.createdAt = validatedData.createdAt;
       this.balance = validatedData.balance;
+      this.smsServiceActiveStatus = validatedData.smsServiceActiveStatus;
     } catch (error) {
       if (error instanceof ZodError)
         throw new SchemaError((error as ZodError).issues[0].message);
@@ -75,12 +79,17 @@ export default abstract class AccountEntity {
     }
   }
 
+  setSmsServiceActiveStatus(smsServiceActiveStatus: boolean) {
+    this.smsServiceActiveStatus = smsServiceActiveStatus;
+  }
+
   toJson(): string {
     return JSON.stringify({
       name: this.name,
       number: this.number,
       createdAt: this.createdAt,
       balance: this.balance,
+      smsServiceActiveStatus: this.smsServiceActiveStatus,
     });
   }
 
@@ -90,6 +99,7 @@ export default abstract class AccountEntity {
     accountMap.set("number", this.number);
     accountMap.set("createdAt", this.createdAt);
     accountMap.set("balance", this.balance);
+    accountMap.set("smsServiceActiveStatus", this.smsServiceActiveStatus);
     return accountMap;
   }
 
@@ -103,6 +113,7 @@ export default abstract class AccountEntity {
       balance: z.number().multipleOf(0.01, {
         message: "Account balance can have two decimal precision.",
       }),
+      smsServiceActiveStatus: z.boolean(),
     });
   }
 }
