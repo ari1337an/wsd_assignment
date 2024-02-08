@@ -1,11 +1,6 @@
 import AccountsRepository from "@/infrastructure/repositories/AccountsRepository";
 import AccountsFactory from "@/infrastructure/factories/AccountsFactory";
-
-enum AccountType {
-  Current = "current",
-  Savings = "savings",
-  Salary = "salary",
-}
+import AccountType from "@/infrastructure/enums/AccountType";
 
 export default class CreateNewAccountUseCase {
   static execute(
