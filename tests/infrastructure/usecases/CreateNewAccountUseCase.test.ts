@@ -3,11 +3,38 @@ import CreateNewAccountUseCase from "@/infrastructure/usecases/CreateNewAccountU
 import AccountsRepositoryImplementation from "@/data/repositories/AccountsRepositoryImplementation";
 import DataContainer from "@/data/datasource/DataContainer";
 import AccountType from "@/infrastructure/enums/AccountType";
+import MinimumAccountBalanceConfig from "@/infrastructure/config/MinimumAccountBalanceConfig";
+import SchemaError from "@/infrastructure/errors/SchemaError";
 
 describe("CreateNewAccountUseCase tests", () => {
   beforeEach(() => {
     // Clear all data before each test
     DataContainer.getInstance().clear();
+  });
+
+  it("should try to create a saving account with minimum than the minimum required balance and expect error", () => {
+    const accountsRepository = new AccountsRepositoryImplementation(
+      DataContainer.getInstance()
+    );
+
+    const testcase_account_detail = {
+      type: AccountType.Savings,
+      number: 123456,
+      createdAt: new Date().toISOString(),
+      balance: MinimumAccountBalanceConfig.SAVINGS_ACCOUNT_MIN_BALANCE - 10,
+    };
+
+    expect(() =>
+      CreateNewAccountUseCase.execute(
+        accountsRepository,
+        testcase_account_detail
+      )
+    ).toThrow(SchemaError);
+
+    const allAccounts = accountsRepository.getAllAccounts();
+
+    // assertions
+    expect(allAccounts.length).toBe(0);
   });
 
   it("should add a new Savings account successfully", () => {
@@ -22,7 +49,10 @@ describe("CreateNewAccountUseCase tests", () => {
       balance: 1000,
     };
 
-    CreateNewAccountUseCase.execute(accountsRepository, testcase_account_detail);
+    CreateNewAccountUseCase.execute(
+      accountsRepository,
+      testcase_account_detail
+    );
 
     const allAccounts = accountsRepository.getAllAccounts();
 
@@ -46,7 +76,10 @@ describe("CreateNewAccountUseCase tests", () => {
       balance: 2000,
     };
 
-    CreateNewAccountUseCase.execute(accountsRepository, testcase_account_detail);
+    CreateNewAccountUseCase.execute(
+      accountsRepository,
+      testcase_account_detail
+    );
 
     const allAccounts = accountsRepository.getAllAccounts();
 
@@ -70,7 +103,10 @@ describe("CreateNewAccountUseCase tests", () => {
       balance: 3000,
     };
 
-    CreateNewAccountUseCase.execute(accountsRepository, testcase_account_detail);
+    CreateNewAccountUseCase.execute(
+      accountsRepository,
+      testcase_account_detail
+    );
 
     const allAccounts = accountsRepository.getAllAccounts();
 

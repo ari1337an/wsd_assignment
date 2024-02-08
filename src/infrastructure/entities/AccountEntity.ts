@@ -31,6 +31,9 @@ export default abstract class AccountEntity {
       this.createdAt = validatedData.createdAt;
       this.balance = validatedData.balance;
       this.smsServiceActiveStatus = validatedData.smsServiceActiveStatus;
+
+      // Check if the initial balance is greater than or equal to the minimum balance
+      this.validateMinimumBalance();
     } catch (error) {
       if (error instanceof ZodError)
         throw new SchemaError((error as ZodError).issues[0].message);
@@ -66,6 +69,13 @@ export default abstract class AccountEntity {
         })
         .parse(amount);
 
+      // Check if the resulting balance after withdrawal is greater than or equal to the minimum balance
+      if (this.balance - validatedAmount < this.getMinimumBalance()) {
+        throw new WithdrawError(
+          "Minimum balance requirement won't met after withdrawal!"
+        );
+      }
+
       // Check if the account has sufficient balance
       if (this.balance < validatedAmount) {
         throw new WithdrawError("Insufficient balance for withdrawal!");
@@ -82,6 +92,16 @@ export default abstract class AccountEntity {
   setSmsServiceActiveStatus(smsServiceActiveStatus: boolean) {
     this.smsServiceActiveStatus = smsServiceActiveStatus;
   }
+
+  private validateMinimumBalance() {
+    if (this.balance < this.getMinimumBalance()) {
+      throw new SchemaError(
+        "Initial balance does not meet the minimum balance requirement!"
+      );
+    }
+  }
+
+  abstract getMinimumBalance(): number;
 
   toJson(): string {
     return JSON.stringify({
