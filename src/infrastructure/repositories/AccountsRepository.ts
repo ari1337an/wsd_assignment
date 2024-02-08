@@ -5,7 +5,7 @@ export default interface AccountsRepository {
   dataSource: DataContainer<AccountEntity>;
 
   addAccount(account: AccountEntity): boolean;
-  getAccountByNumber(number: number): AccountEntity | undefined;
+  getAccountByNumber(number: number): AccountEntity;
   getAllAccounts(): AccountEntity[];
   updateAccount(account: AccountEntity): boolean;
   deleteAccount(number: number): boolean;

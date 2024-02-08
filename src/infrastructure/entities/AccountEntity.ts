@@ -1,5 +1,6 @@
 import { z, ZodError } from "zod";
 import SchemaError from "@/infrastructure/errors/SchemaError";
+import DepositError from "@/infrastructure/errors/DepositError";
 
 export default abstract class AccountEntity {
   name: string;
@@ -28,6 +29,24 @@ export default abstract class AccountEntity {
     } catch (error) {
       if (error instanceof ZodError)
         throw new SchemaError((error as ZodError).issues[0].message);
+      else throw error;
+    }
+  }
+
+  deposit(amount: number): void {
+    try {
+      const validatedAmount = z
+        .number()
+        .positive("Deposit amount must be a positive number")
+        .multipleOf(0.01, {
+          message: "Amount can have two decimal precision.",
+        })
+        .parse(amount);
+
+      this.balance += validatedAmount;
+    } catch (error) {
+      if (error instanceof ZodError)
+        throw new DepositError((error as ZodError).issues[0].message);
       else throw error;
     }
   }
