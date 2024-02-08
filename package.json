@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A simple banking application for wsd coding round interview.",
   "main": "index.js",
+  "module": "CommonJS",
   "scripts": {
     "start": "rm -rf ./build && tsc -p ./tsconfig.build.json && TS_NODE_BASEURL=./build node -r tsconfig-paths/register build/index.js",
     "test": "jest"
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/ari1337an/wsd_assignment#readme",
   "devDependencies": {
+    "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.16",
     "jest": "^29.7.0",
@@ -31,6 +33,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "inquirer": "^8.0.0",
     "zod": "^3.22.4"
   }
 }

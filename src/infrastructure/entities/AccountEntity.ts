@@ -69,16 +69,16 @@ export default abstract class AccountEntity {
         })
         .parse(amount);
 
+      // Check if the account has sufficient balance
+      if (this.balance < validatedAmount) {
+        throw new WithdrawError("Insufficient balance for withdrawal!");
+      }
+
       // Check if the resulting balance after withdrawal is greater than or equal to the minimum balance
       if (this.balance - validatedAmount < this.getMinimumBalance()) {
         throw new WithdrawError(
           "Minimum balance requirement won't met after withdrawal!"
         );
-      }
-
-      // Check if the account has sufficient balance
-      if (this.balance < validatedAmount) {
-        throw new WithdrawError("Insufficient balance for withdrawal!");
       }
 
       this.balance -= validatedAmount;
